@@ -1,0 +1,27 @@
+PDS_VERSION_ID     = PDS3
+RECORD_TYPE        = STREAM
+OBJECT             = TEXT
+  NOTE             = "Description of files in the CALIB
+                     directory"
+  PUBLICATION_DATE = 2010-04-14
+END_OBJECT         = TEXT
+END
+
+AMI_LMA_071101_00001_00000.IMG Dark bias frame, representing the
+                               charge which is built up by dark
+                               current during read out of the CCD,
+                               scaled to a temperature of 273.15 K
+
+AMI_LMA_071101_00002_00001.IMG Dark current frame, representing the
+                               charge which is built up by dark
+                               current during exposure, scaled to an
+                               exposure time of 1 ms and a
+                               temperature of 273.15 K
+
+AMI_LMA_080319_00001_XXXXX.IMG Flat field, representing the
+                               different relative responsivities of
+                               the pixels for an average lunar
+                               spectrum
+
+CALINFO.TXT                    Description of files in the CALIB
+                               directory

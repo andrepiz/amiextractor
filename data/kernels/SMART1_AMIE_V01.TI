@@ -1,0 +1,595 @@
+KPL/IK
+
+AMIE Instrument kernel
+===========================================================================
+
+   This instrument kernel (I-kernel) contains SMART-1 Advanced Moon
+   micro-Imager Experimenter (AMIE) camera optics, detector, and
+   field-of-view parameters.
+
+
+Version and Date
+---------------------------------------------------------------------------
+
+   Version 0.1 -- January 19, 2005 -- Jorge Diaz del Rio, RSSD/ESA
+
+      Change the value of the center points of each of the CCD filters
+      detector after review and approval by the AMIE instrument team.
+
+   Version 0.0 -- December 09, 2004 -- Jorge Diaz del Rio, RSSD/ESA
+
+      Preliminary Version. Pending review and approval by AMIE 
+      instrument team.
+
+
+
+References
+---------------------------------------------------------------------------
+
+   1. ``Kernel Pool Required Reading''
+
+   2. ``C-kernel Required Reading''
+
+   3. ``AMIE Experiment ICD'', S1-AMI-EID-3001, Issue 5.0,  May 04, 2001
+
+   4. SMART-1 Frames Definition Kernel (FK), latest version.
+
+   5. ``AMIE Boresight Analysis'', S1-AMIE-RSSD-TN-004, October 28, 2004
+
+   6. ``AMIE Detector Orientation in S/C coordinate System'', 
+      S1-AMIE-RSSD-TN-001/1d, January 30, 2004
+
+   7. ``AMIE Flight User Manual'', S1-AMI-MA-3001, Issue 2.1,
+      January 30, 2003
+
+   8. ``AMIE to Planetary Science Archive ICD'', S1-AMIE-RSSD-IF-001/D1,
+      September 25, 2003
+
+
+Contact Information
+========================================================================
+
+   Jorge Diaz del Rio, RSSD/ESA, (31) 71-565-5175, jdiaz@rssd.esa.int
+
+
+Implementation Notes
+--------------------------------------------------------
+
+   Applications that need SPICE I-kernel data must ''load'' the I-kernel
+   file, normally during program initialization.
+
+   Loading the kernel using the SPICELIB routine FURNSH causes the data
+   items and their associated values present in the kernel to become
+   associated with a data structure called the ''kernel pool''. The
+   application program may then obtain the value(s) for any IK data
+   item using the SPICELIB routines GDPOOL, GIPOOL, GCPOOL. Routine
+   GETFOV may be used if the file contains instrument field-of-view
+   (FOV) specification. See [1] for details.
+
+   This file was created with, and can be updated with a text editor or
+   word processor.
+
+
+Conventions for Specifying Data
+--------------------------------------------------------
+
+   Data items are specified using ``keyword=value'' assignments [1].
+   All keywords referencing values in this I-kernel start with the
+   characters `INS' followed by the NAIF SMART-1 instrument ID code,
+   constructed using the spacecraft ID number (238) followed by the NAIF
+   three digit ID number for AMIE CCD camera base (100), or individual
+   AMIE filters (110, 120, 130, 131, 140, 141, 150, 151)
+   These IDs are defined in [4] as follows:
+
+            Instrument name          ID
+            --------------------   -------
+            SMART1_AMIE_CCD        -238100
+
+            SMART1_AMIE_NONE       -238110
+            SMART1_AMIE_LASER      -238120
+            SMART1_AMIE_VIS_X      -238130
+            SMART1_AMIE_VIS_Y      -238131
+            SMART1_AMIE_FEL_X      -238140
+            SMART1_AMIE_FEL_Y      -238141
+            SMART1_AMIE_FEH_X      -238150
+            SMART1_AMIE_FEH_Y      -238151
+
+
+   The remainder of the keyword is an underscore character followed by the
+   unique name of the data item. For example, the focal length of the
+   NONE AMIE camera filter is specified by
+
+               INS-238110_FOCAL_LENGTH
+
+   The upper bound on the length of all keywords is 32 characters.
+
+   If a keyword is included in more then one file, or if the same
+   keyword appears more than once within a single file, the last
+   assignment supersedes any earlier assignments.
+
+
+Overview
+--------------------------------------------------------
+
+   From [TBD]:
+
+      "AMIE description. To be copied from TBD source provided by
+      the AMIE team."
+
+
+Mounting Alignment
+--------------------------------------------------------
+
+   Refer to the latest version of the SMART-1 Frames Definition
+   Kernel (FK) [4] for the AMIE reference frame definitions and
+   mounting alignment information.
+
+
+Detector Layout
+--------------------------------------------------------
+
+
+Optical Parameters
+--------------------------------------------------------
+
+   The AMIE detector optical parameters are included in the
+   data section below, taken from [3]:
+
+      -------------------------------------------------------------------
+             parameter                CCD          NONE          LASER
+      -------------------------------------------------------------------
+      Focal Length, mm              154.7         154.7          154.7
+      f/ratio                        10.0          10.0           10.0        
+      IFOV, rad/pixel            0.000090      0.000090       0.000090   
+      Field of view (rad)
+          Cross-track            0.092160      0.046080       0.023040
+          Along-track            0.092160      0.046080       0.023040
+      -------------------------------------------------------------------
+
+
+      -------------------------------------------------------------------
+             parameter             VIS_X           VIS_Y         FEL_X   
+      -------------------------------------------------------------------
+      Focal Length, mm              154.7          154.7         154.7
+      f/ratio                        10.0           10.0          10.0
+      IFOV, rad/pixel            0.000090       0.000090      0.000090   
+      Field of view (rad)
+          Cross-track            0.046080       0.023040      0.046080   
+          Along-track            0.023040       0.046080      0.023040
+      -------------------------------------------------------------------
+
+
+      -------------------------------------------------------------------
+             parameter              FEL_Y          FEH_X         FEH_Y  
+      -------------------------------------------------------------------
+      Focal Length, mm              154.7          154.7         154.7
+      f/ratio                        10.0           10.0          10.0
+      IFOV, rad/pixel            0.000090       0.000090      0.000090   
+      Field of view (rad)
+          Cross-track            0.023040       0.046080      0.023040
+          Along-track            0.046080       0.023040      0.046080
+      -------------------------------------------------------------------
+
+
+   Note that the value for cross-track FOV is equal to the value
+   of IFOV multiplied by the number of pixels in the line arrays, for
+   each of the filters as well as for the complete AMIE detector. The value
+   for the along-track FOV is equal to the value of IFOV multiplied by the
+   number of line arrays. 
+
+
+      \begindata
+
+         INS-238100_FOCAL_LENGTH       = ( 154.7                 )
+         INS-238100_F/RATIO            = (  10.0                 )
+         INS-238100_FOV_ANGULAR_SIZE   = (   0.092160 , 0.092160 )
+         INS-238100_IFOV               = (   0.000090            )
+
+         INS-238110_FOCAL_LENGTH       = ( 154.7                 )
+         INS-238110_F/RATIO            = (  10.0                 )
+         INS-238110_FOV_ANGULAR_SIZE   = (   0.046080 , 0.046080 )
+         INS-238110_IFOV               = (   0.000090            )
+
+         INS-238120_FOCAL_LENGTH       = ( 154.7                 )
+         INS-238120_F/RATIO            = (  10.0                 )
+         INS-238120_FOV_ANGULAR_SIZE   = (   0.023040 , 0.023040 )
+         INS-238120_IFOV               = (   0.000090            )
+
+         INS-238130_FOCAL_LENGTH       = ( 154.7                 )
+         INS-238130_F/RATIO            = (  10.0                 )
+         INS-238130_FOV_ANGULAR_SIZE   = (   0.046080 , 0.023040 )
+         INS-238130_IFOV               = (   0.000090            )
+
+         INS-238131_FOCAL_LENGTH       = ( 154.7                 )
+         INS-238131_F/RATIO            = (  10.0                 )
+         INS-238131_FOV_ANGULAR_SIZE   = (   0.023040 , 0.046080 )
+         INS-238131_IFOV               = (   0.000090            )
+
+         INS-238140_FOCAL_LENGTH       = ( 154.7                 )
+         INS-238140_F/RATIO            = (  10.0                 )
+         INS-238140_FOV_ANGULAR_SIZE   = (   0.046080 , 0.023040 )
+         INS-238140_IFOV               = (   0.000090            )
+
+         INS-238141_FOCAL_LENGTH       = ( 154.7                 )
+         INS-238141_F/RATIO            = (  10.0                 )
+         INS-238141_FOV_ANGULAR_SIZE   = (   0.023040 , 0.046080 )
+         INS-238141_IFOV               = (   0.000090            )
+
+         INS-238150_FOCAL_LENGTH       = ( 154.7                 )
+         INS-238150_F/RATIO            = (  10.0                 )
+         INS-238150_FOV_ANGULAR_SIZE   = (   0.046080 , 0.023040 )
+         INS-238150_IFOV               = (   0.000090            )
+
+         INS-238151_FOCAL_LENGTH       = ( 154.7                 )
+         INS-238151_F/RATIO            = (  10.0                 )
+         INS-238151_FOV_ANGULAR_SIZE   = (   0.023040 , 0.046080 )
+         INS-238151_IFOV               = (   0.000090            )
+
+      \begintext
+
+
+Detector CCD Parameters
+--------------------------------------------------------
+
+   The AMIE detector geometry parameters are included in the
+   data section below, taken from [7]:
+
+      -----------------------------------------------------------------
+             parameter              CCD          NONE        LASER
+      -----------------------------------------------------------------
+      Pixel Size, microns
+          Cross-track                14            14           14
+          Along-track                14            14           14
+      Detector Array Size
+          Cross-track              1024 (1)       512          256
+          Along-track              1024 (1)       512          256
+      Detector Array Center
+          Cross-track             512.5 (1)     256.5 (2)    128.5 (2)
+          Along-track             512.5 (1)     256.5 (2)    128.5 (2)
+      -----------------------------------------------------------------
+
+
+      -----------------------------------------------------------------
+             parameter           VIS_X         VIS_Y         FEL_X    
+      -----------------------------------------------------------------
+      Pixel Size, microns
+          Cross-track               14            14            14 
+          Along-track               14            14            14
+      Detector Array Size
+          Cross-track              512           256           512    
+          Along-track              256           512           256    
+      Detector Array Center
+          Cross-track            256.5 (2)     128.5 (2)     256.5 (2)
+          Along-track            128.5 (2)     256.5 (2)     128.5 (2)
+      -----------------------------------------------------------------
+
+
+      -----------------------------------------------------------------
+             parameter           FEL_Y         FEH_X         FEH_Y
+      -----------------------------------------------------------------
+      Pixel Size, microns
+          Cross-track               14            14            14
+          Along-track               14            14            14
+      Detector Array Size
+          Cross-track             256            512           256 
+          Along-track             512            256           512 
+      Detector Array Center
+          Cross-track           128.5 (2)      256.5 (2)     128.5 (2)       
+          Along-track           256.5 (2)      128.5 (2)     256.5 (2)
+      -----------------------------------------------------------------
+
+
+   (1) These values correspond to the combined AMIE camera CCD.
+
+   (2) These values are referred to the CCD array size and counted from
+       the origin of the filter. Each single filter is considered to be
+       an independent CCD.
+
+      \begindata
+
+         INS-238100_PIXEL_SIZE         = ( 14 , 14 )
+         INS-238100_PIXEL_SAMPLES      = (  1024   )
+         INS-238100_PIXEL_LINES        = (  1024   )
+         INS-238100_CCD_CENTER         = ( 512.5 , 512.5 )
+
+         INS-238110_PIXEL_SIZE         = ( 14 , 14 )
+         INS-238110_PIXEL_SAMPLES      = (   512   )
+         INS-238110_PIXEL_LINES        = (   512   )
+         INS-238110_CCD_CENTER         = ( 256.5 , 256.5 )
+
+         INS-238120_PIXEL_SIZE         = ( 14 , 14 )
+         INS-238120_PIXEL_SAMPLES      = (   256   )
+         INS-238120_PIXEL_LINES        = (   256   )
+         INS-238120_CCD_CENTER         = ( 128.5 , 128.5 )
+
+         INS-238130_PIXEL_SIZE         = ( 14 , 14 )
+         INS-238130_PIXEL_SAMPLES      = (   512   )
+         INS-238130_PIXEL_LINES        = (   256   )
+         INS-238130_CCD_CENTER         = ( 256.5 , 128.5 )
+
+         INS-238131_PIXEL_SIZE         = ( 14 , 14 )
+         INS-238131_PIXEL_SAMPLES      = (   256   )
+         INS-238131_PIXEL_LINES        = (   512   )
+         INS-238131_CCD_CENTER         = ( 128.5 , 256.5 )
+
+         INS-238140_PIXEL_SIZE         = ( 14 , 14 )
+         INS-238140_PIXEL_SAMPLES      = (   512   )
+         INS-238140_PIXEL_LINES        = (   256   )
+         INS-238140_CCD_CENTER         = ( 256.5 , 128.5 )
+
+         INS-238141_PIXEL_SIZE         = ( 14 , 14 )
+         INS-238141_PIXEL_SAMPLES      = (   256   )
+         INS-238141_PIXEL_LINES        = (   512   )
+         INS-238141_CCD_CENTER         = ( 128.5 , 256.5 )
+
+         INS-238150_PIXEL_SIZE         = ( 14 , 14 )
+         INS-238150_PIXEL_SAMPLES      = (   512   )
+         INS-238150_PIXEL_LINES        = (   256   )
+         INS-238150_CCD_CENTER         = ( 256.5 , 128.5 )
+
+         INS-238151_PIXEL_SIZE         = ( 14 , 14 )
+         INS-238151_PIXEL_SAMPLES      = (   256   )
+         INS-238151_PIXEL_LINES        = (   512   )
+         INS-238151_CCD_CENTER         = ( 128.5 , 256.5 )
+
+      \begintext
+
+
+Wavelength Ranges
+---------------------------------------------------------------------------
+
+   This section contains assignments specifying AMIE detector filters
+   wavelength ranges.
+    
+   The following filters wavelength band center/width data are
+   taken from [8]:
+
+      -------------------------------------------
+         Filter       Band Center,   Bandwidth, 
+            #          nanometers    nanometers
+      -------------------------------------------
+          NONE            800           700
+          LASER           847            10
+          VIS_X           750            10
+          VIS_Y           750            10
+          FEL_X           915            30
+          FEL_Y           915            30
+          FEH_X           960            70 (1)
+          FEH_Y           960            70 (1)
+      -------------------------------------------
+
+   (1) FeH_X and FeH_Y are long-pass filters and therefore, in theory
+       there is no bandwidth associated to them. In the practice, this
+       filters have been implemented as band-pass, and the bandwidth 
+       and center frequency obtained by measurement performed at ESTEC
+       by AMIE Team (from personal communication from M. Almeida, AMIE
+       Co-I). 
+
+
+   The set of assignments below specifies wavelength center and bandwidth
+   for each filter, with units the same as in the table above.
+
+      \begindata
+
+         INS-238110_FILTER_BANDCENTER  = ( 800 )
+         INS-238110_FILTER_BANDWIDTH   = ( 700 )
+
+         INS-238120_FILTER_BANDCENTER  = ( 847 )
+         INS-238120_FILTER_BANDWIDTH   = (  10 )
+
+         INS-238130_FILTER_BANDCENTER  = ( 750 )
+         INS-238130_FILTER_BANDWIDTH   = (  10 )
+
+         INS-238131_FILTER_BANDCENTER  = ( 750 )
+         INS-238131_FILTER_BANDWIDTH   = (  10 )
+
+         INS-238140_FILTER_BANDCENTER  = ( 915 )
+         INS-238140_FILTER_BANDWIDTH   = (  30 )
+
+         INS-238141_FILTER_BANDCENTER  = ( 915 )
+         INS-238141_FILTER_BANDWIDTH   = (  30 )
+
+         INS-238150_FILTER_BANDCENTER  = ( 960 )
+         INS-238150_FILTER_BANDWIDTH   = (  70 )
+
+         INS-238151_FILTER_BANDCENTER  = ( 960 )
+         INS-238151_FILTER_BANDWIDTH   = (  70 )
+
+      \begintext
+
+FOV Definitions
+---------------------------------------------------------------------------
+
+   This section contains definitions for the AMIE camera combined FOV, 
+   and AMIE filters individual FOVs. These definitions are provided in a
+   format consistent required by the SPICE (CSPICE) function GETFOV
+   (getfov_c).
+
+
+AMIE camera combined FoV
+
+   The set of assignments in the data section below defines the AMIE combined
+   FOV with respect to the SM1_AMIE_CCD frame to be a rectangle with the
+   corners defined by the first and last pixels of the first and last
+   lines of the CCD and the boresight along the +Z axis of the SM1_AMIE_CCD
+   frame. This FOV definition uses angular extent style specification
+   with the cross and along track angular sizes taken from the ``Optics
+   Parameters'' section above.
+
+   [Description and graphics TBW/TBC]
+
+      \begindata
+
+         INS-238100_FOV_FRAME                 = 'SMART1_AMIE_CCD'
+         INS-238100_FOV_SHAPE                 = 'RECTANGLE'
+         INS-238100_BORESIGHT                 = (
+                                            0.000000     0.000000   1.000000
+                                               )
+         INS-238100_FOV_CLASS_SPEC            = 'ANGLES'
+         INS-238100_FOV_REF_VECTOR            = (
+                                            1.000000     0.000000     0.000000
+                                               )
+         INS-238100_FOV_REF_ANGLE             = ( 2.65 )
+         INS-238100_FOV_CROSS_ANGLE           = ( 2.65 )
+         INS-238100_FOV_ANGLE_UNITS           = 'DEGREES'
+
+      \begintext
+
+
+AMIE Filters FOVs
+
+   [Description and graphics TBW/TBC]
+
+      \begindata
+
+         INS-238110_FOV_FRAME                 = 'SMART1_AMIE_NONE'
+         INS-238110_FOV_SHAPE                 = 'RECTANGLE'
+         INS-238110_BORESIGHT                 = (
+                                            0.000000     0.000000   1.000000
+                                               )
+         INS-238110_FOV_CLASS_SPEC            = 'ANGLES'
+         INS-238110_FOV_REF_VECTOR            = (
+                                            1.000000     0.000000     0.000000
+                                               )
+         INS-238110_FOV_REF_ANGLE             = ( 1.325 )
+         INS-238110_FOV_CROSS_ANGLE           = ( 1.325 )
+         INS-238110_FOV_ANGLE_UNITS           = 'DEGREES'
+
+
+
+         INS-238120_FOV_FRAME                 = 'SMART1_AMIE_LASER'
+         INS-238120_FOV_SHAPE                 = 'RECTANGLE'
+         INS-238120_BORESIGHT                 = (
+                                            0.000000     0.000000   1.000000
+                                               )
+         INS-238120_FOV_CLASS_SPEC            = 'ANGLES'
+         INS-238120_FOV_REF_VECTOR            = (
+                                            1.000000     0.000000     0.000000
+                                               )
+         INS-238120_FOV_REF_ANGLE             = ( 0.6625 )
+         INS-238120_FOV_CROSS_ANGLE           = ( 0.6625 )
+         INS-238120_FOV_ANGLE_UNITS           = 'DEGREES'
+
+
+
+         INS-238130_FOV_FRAME                 = 'SMART1_AMIE_VIS_X'
+         INS-238130_FOV_SHAPE                 = 'RECTANGLE'
+         INS-238130_BORESIGHT                 = (
+                                            0.000000     0.000000   1.000000
+                                               )
+         INS-238130_FOV_CLASS_SPEC            = 'ANGLES'
+         INS-238130_FOV_REF_VECTOR            = (
+                                            1.000000     0.000000     0.000000
+                                               )
+         INS-238130_FOV_REF_ANGLE             = ( 0.6625 )
+         INS-238130_FOV_CROSS_ANGLE           = ( 1.325  )
+         INS-238130_FOV_ANGLE_UNITS           = 'DEGREES'
+
+
+
+         INS-238131_FOV_FRAME                 = 'SMART1_AMIE_VIS_Y'
+         INS-238131_FOV_SHAPE                 = 'RECTANGLE'
+         INS-238131_BORESIGHT                 = (
+                                            0.000000     0.000000   1.000000
+                                               )
+         INS-238131_FOV_CLASS_SPEC            = 'ANGLES'
+         INS-238131_FOV_REF_VECTOR            = (
+                                            1.000000     0.000000     0.000000
+                                               )
+         INS-238131_FOV_REF_ANGLE             = ( 1.325  )
+         INS-238131_FOV_CROSS_ANGLE           = ( 0.6625 )
+         INS-238131_FOV_ANGLE_UNITS           = 'DEGREES'
+
+
+
+         INS-238140_FOV_FRAME                 = 'SMART1_AMIE_FEL_X'
+         INS-238140_FOV_SHAPE                 = 'RECTANGLE'
+         INS-238140_BORESIGHT                 = (
+                                            0.000000     0.000000   1.000000
+                                               )
+         INS-238140_FOV_CLASS_SPEC            = 'ANGLES'
+         INS-238140_FOV_REF_VECTOR            = (
+                                            1.000000     0.000000     0.000000
+                                               )
+         INS-238140_FOV_REF_ANGLE             = ( 0.6625 )
+         INS-238140_FOV_CROSS_ANGLE           = ( 1.325  )
+         INS-238140_FOV_ANGLE_UNITS           = 'DEGREES'
+
+
+
+         INS-238141_FOV_FRAME                 = 'SMART1_AMIE_FEL_Y'
+         INS-238141_FOV_SHAPE                 = 'RECTANGLE'
+         INS-238141_BORESIGHT                 = (
+                                            0.000000     0.000000   1.000000
+                                               )
+         INS-238141_FOV_CLASS_SPEC            = 'ANGLES'
+         INS-238141_FOV_REF_VECTOR            = (
+                                            1.000000     0.000000     0.000000
+                                               )
+         INS-238141_FOV_REF_ANGLE             = ( 1.325  )
+         INS-238141_FOV_CROSS_ANGLE           = ( 0.6625 )
+         INS-238141_FOV_ANGLE_UNITS           = 'DEGREES'
+
+
+
+         INS-238150_FOV_FRAME                 = 'SMART1_AMIE_FEH_X'
+         INS-238150_FOV_SHAPE                 = 'RECTANGLE'
+         INS-238150_BORESIGHT                 = (
+                                            0.000000     0.000000   1.000000
+                                               )
+         INS-238150_FOV_CLASS_SPEC            = 'ANGLES'
+         INS-238150_FOV_REF_VECTOR            = (
+                                            1.000000     0.000000     0.000000
+                                               )
+         INS-238150_FOV_REF_ANGLE             = ( 0.6625 )
+         INS-238150_FOV_CROSS_ANGLE           = ( 1.325  )
+         INS-238150_FOV_ANGLE_UNITS           = 'DEGREES'
+
+
+
+         INS-238151_FOV_FRAME                 = 'SMART1_AMIE_FEH_Y'
+         INS-238151_FOV_SHAPE                 = 'RECTANGLE'
+         INS-238151_BORESIGHT                 = (
+                                            0.000000     0.000000   1.000000
+                                               )
+         INS-238151_FOV_CLASS_SPEC            = 'ANGLES'
+         INS-238151_FOV_REF_VECTOR            = (
+                                            1.000000     0.000000     0.000000
+                                               )
+         INS-238151_FOV_REF_ANGLE             = ( 1.325  )
+         INS-238151_FOV_CROSS_ANGLE           = ( 0.6625 )
+         INS-238151_FOV_ANGLE_UNITS           = 'DEGREES'
+
+      \begintext
+
+Optical Distortion
+--------------------------------------------------------
+
+   This section provides optical distortion and geometric calibration
+   data for AMIE camera.
+
+
+   The optical distortion for the AMIE camera was not available at the time
+   when this version of the IK was released.
+
+
+Platform ID
+---------------------------------------------------------------------------
+
+   This number is the NAIF instrument ID of the platform on which the
+   camera is mounted. This platform is the spacecraft.
+
+      \begindata
+
+      INS-238100_PLATFORM_ID  = ( -238000 )
+      INS-238110_PLATFORM_ID  = ( -238000 )
+      INS-238120_PLATFORM_ID  = ( -238000 )
+      INS-238130_PLATFORM_ID  = ( -238000 )
+      INS-238131_PLATFORM_ID  = ( -238000 )
+      INS-238140_PLATFORM_ID  = ( -238000 )
+      INS-238141_PLATFORM_ID  = ( -238000 )
+      INS-238150_PLATFORM_ID  = ( -238000 )
+      INS-238151_PLATFORM_ID  = ( -238000 )
+
+      \begintext
+

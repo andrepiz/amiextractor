@@ -1,0 +1,204 @@
+KPL/SCLK
+
+
+SMART-1 SCLK File
+===========================================================================
+
+     This file is a SPICE spacecraft clock (SCLK) kernel containing
+     information required for SMART-1 spacecraft on-board clock to UTC
+     conversion.
+
+
+Production/History of this SCLK file
+--------------------------------------------------------
+
+     This file was generated using data from the SMART-1 time correlation
+     data spreadsheet (Timecorrelation.xls) as follows:
+
+        -  the clock resets and intervals between them were identified
+           from the spreadsheet data
+
+        -  for each interval between resets the difference of the OBT
+           from the spreadsheet OBT-SCET correlation pairs and an
+           ``ideal'' OBT computed for the same SCETs but assuming an
+           ``ideal'' clock running at the same rate as UTC was
+           computed and plotted
+
+        -  based on the analysis of the plots a single clock rate was
+           picked for each of the intervals except for the interval
+           following the last clock reset (or more specifically the
+           switch from the side A to the side B on 2004-169T12:00); that
+           last interval had to be broken into three intervals --
+           2004-169T12:00 to 2005-045T00:00, 2005-045T00:00 to
+           2005-048T12:00 and 2005-048T12:00 to infinity -- because the
+           plots indicated that on 2005-048T12:00 the trend has changed
+           back to what it was on side A.
+
+        -  the clock correlation reference points and rates determined
+           as the result of this analysis were formatted as a SCLKvSCET
+           file, which was converted to the this SCLK file using the
+           MAKCLK utility program.
+
+     A comparison of the correlation provided by this SCLK kernel with
+     the OBT-SCET time points from the spreadsheet was performed to 
+     validate this file. The comparison showed that this SCLK kernel
+     matches the spreadsheet data during the intervals listed below 
+     to better the specified deltas:
+
+           Begin time, SCET    End time, SCET      DELTA, sec (1)
+           -----------------   -----------------   ----------
+           2003-270T23:56:27   2004-169T12:00:03        0.3   
+           2004-169T12:00:03   2004-316T08:00:00        1.0   (2)
+           2004-316T08:00:00   2005-045T00:00:03        0.02
+           2005-045T00:00:03   2005-048T12:00:00        0.7   (3)
+           2005-048T12:00:00   2006-246T05:42:20        0.02
+     
+           (1) The outlier points from the spreadsheet indicating
+               physically impossible clock deviations were excluded
+               from validation.
+         
+           (2) The spreadsheet data for the first 150 days after switch
+               to side seem much noisier than for the other period.
+           
+           (3) Because the actual time at which the trend switched back
+               to that of the side A is not known, the delta for this
+               artificially introduced interval is considered to be the
+               maximum difference between the two trends at that time.
+
+     An additional validation was performed by comparing the
+     correlation provided by this SCLK kernel to the raw time packets
+     for a number of days in January 2006. For all checked packet sets
+     the difference was under 0.02 seconds shown for this time period in
+     the table above.
+         
+
+Usage
+--------------------------------------------------------
+
+     This file must be loaded into the user's program by a call to the
+     FURNSH subroutine
+
+          CALL FURNSH( 'this_file_name' )
+
+     in order to use the SPICELIB SCLK family of subroutines to convert
+     SM1 spacecraft on-board clock to ET and vice versa.
+
+
+SCLK Format
+--------------------------------------------------------
+
+     The on-board clock, the conversion for which is provided by this SCLK
+     file, consists of two fields:
+
+          SSSSSSSSSS:FFFFF
+
+     where:
+
+          SSSSSSSSSS -- count of on-board seconds
+
+          FFFFF      -- count of fractions of a second with one fraction
+                        being 1/65536 of a second
+
+
+SCLKvSCET Data Used as Input to MAKCLK
+--------------------------------------------------------
+
+     The SCLKvSET file that was converted to this SCLK kernels using
+     the MAKCLK program contained the following time correlation data:
+
+        *____SCLK0________ ________SCET0________ _DUT__ __SCLKRATE__
+                   9.13107 2003-270T23:56:27.043 64.184 0.999999961384
+                   1.12452 2003-271T23:13:20.191 64.184 0.999999961384
+                   8.60293 2003-273T07:12:22.290 64.184 0.999999961384
+                 108.60948 2003-274T13:58:14.511 64.184 0.999999961384
+                 252.24248 2003-287T07:58:31.854 64.184 0.999999961384
+                   9.01835 2003-296T08:54:03.585 64.184 0.999999961384
+                   1.03604 2004-056T13:20:25.026 64.184 0.999999974116
+             9758320.19661 2004-169T12:00:03.475 64.184 0.999999916735
+            30623922.07209 2005-045T00:00:03.547 64.184 1.000002444048
+            30926318.19661 2005-048T12:00:00.476 64.184 0.999999979441
+
+
+References
+--------------------------------------------------------
+
+         1.   SCLK Required Reading Document
+
+         2.   SMART-1 Time Correlation Spreadsheet
+              (Timecorrelation.xls)
+
+         3.   MAKCLK User' Guide
+
+
+Inquiries
+--------------------------------------------------------
+
+     If you have any questions regarding this file contact
+
+           Joe Zender
+           0031 (0)71 565 4919 
+           Joe.Zender@esa.int
+
+     or 
+
+           Jose Luis Vazquez-Garcia
+           0034 91 8131 310
+           jlvazquez@sciops.esa.int
+
+     or
+
+           Boris V. Semenov
+           (818) 354-8136
+           Boris.Semenov@jpl.nasa.gov
+
+
+Kernel DATA
+--------------------------------------------------------
+
+\begindata
+
+
+SCLK_KERNEL_ID           = ( @2006-10-31/15:42:59.00 )
+
+SCLK_DATA_TYPE_238        = ( 1 )
+SCLK01_TIME_SYSTEM_238    = ( 2 )
+SCLK01_N_FIELDS_238       = ( 2 )
+SCLK01_MODULI_238         = ( 4294967296 65536 )
+SCLK01_OFFSETS_238        = ( 0 0 )
+SCLK01_OUTPUT_DELIM_238   = ( 1 )
+
+SCLK_PARTITION_START_238  = ( 6.0293100000000E+05
+                             7.7988000000000E+04
+                             5.8458100000000E+05
+                             7.1388360000000E+06
+                             1.6539320000000E+07
+                             5.9165900000000E+05
+                             6.9140000000000E+04
+                             6.3952127918100E+11 )
+
+SCLK_PARTITION_END_238    = ( 5.4933816100000E+09
+                             7.5460308790000E+09
+                             7.2588424170000E+09
+                             7.2202735815000E+10
+                             5.1195683219000E+10
+                             7.0883677874900E+11
+                             6.3952517572700E+11
+                             2.8147497671065E+14 )
+
+SCLK01_COEFFICIENTS_238   = (
+ 
+    0.0000000000000E+00     1.1797905122700E+08     9.9999996146361E-01
+    5.4927786790000E+09     1.1806286437500E+08     9.9999996144456E-01
+    1.3038731570000E+10     1.1817800647400E+08     9.9999996134844E-01
+    2.0296989406000E+10     1.1828875869500E+08     9.9999996138058E-01
+    9.2492586385000E+10     1.1939037603800E+08     9.9999996138694E-01
+    1.4367173028400E+11     1.2017130776900E+08     9.9999996138371E-01
+    8.5250791737400E+11     1.3098728921000E+08     9.9999997411620E-01
+    1.4920330239610E+12     1.4074566765900E+08     9.9999991670513E-01
+    2.8594811041810E+12     1.6161126773100E+08     1.0000024438059E+00
+    2.8792989408890E+12     1.6191366466000E+08     9.9999997944100E-01 )
+
+\begintext
+
+
+
