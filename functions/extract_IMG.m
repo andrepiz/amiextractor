@@ -1,10 +1,10 @@
-function [params, label, bimg, img] = extract_IMG(imgfile_path, metakernel_path, flag_debug)
+function [params, label, bimg, img] = extract_IMG(imgfile_path, metakernel_path, flag_plot)
 
 %% SPICE KERNEL POOLING
 cspice_furnsh(fullfile(metakernel_path,'metakernel.tm'));
 
 %% EXTRACT DATA FROM IMG
-[label, bimg, img] = decode_IMG(imgfile_path, flag_debug);
+[label, bimg, img] = decode_IMG(imgfile_path, flag_plot);
 
 label_temp = extractBetween(label, 'START_TIME         = ',' ');
 params.etImg = cspice_str2et(label_temp{:});
@@ -120,6 +120,7 @@ q_J20002CAM = dcm_to_quat(dcm_J20002CAM);
 %   body-fixed frame, SPICE-consistent
 q_J20002IAU = dcm_to_quat(dcm_J20002IAU);
 
+flag_debug = false;
 if flag_debug
     R_frames2ref(:,:,1) = dcm_J20002CSF';
     R_frames2ref(:,:,2) = dcm_J20002IAU';
