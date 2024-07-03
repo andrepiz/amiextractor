@@ -6,7 +6,7 @@ end
 
 pxs = length(bin)/bytes_per_px;
 rows = number_records;
-cols = pxs/rows;
+cols = fix(pxs/rows);
 img = zeros(rows, cols);
 
 jj = 1;
