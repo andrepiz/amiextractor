@@ -1,21 +1,34 @@
-%% Decode an IMG file into parameters, labels, browse image and image
-
+%% MAIN
 clear
 clc
 close all
 
-init
+init()
 
 flag_plot = true;
 
-imgfile_path = fullfile(img_path,'AMI_EE3_040819_00208_00030.IMG'); 
-%imgfile_path = fullfile(img_path,'04-10-28\AMI_EE3_041028_00269_00005.IMG');
-%imgfile_path = fullfile(img_path,'04-11-11\AMI_EE3_041111_00008_00040.IMG');
-%imgfile_path = fullfile(img_path,'AMI_EE3_040118_00004_00400.IMG');
+%% Choose image
+imgfile_name = 'AMI_EE3_040819_00208_00030.IMG'; % Moon high phase angle
+% imgfile_name = 'AMI_EE3_041028_00269_00005.IMG'; % Moon low phase angle
+% imgfile_name = 'AMI_EE3_041111_00008_00040.IMG'; % Moon high phase angle close up
+% imgfile_name = 'AMI_EE3_040326_00034_00200.IMG'; % Vega
 
-% img\AMI_EE3_040118_00004_00400.IMG % Moon 18/01/04
-% img\AMI_EE3_040326_00034_00200.IMG % Vega
-% img\AMI_EE3_040504_00013_00020.IMG % Moon 04/05/04
-% img\04-10-28\AMI_EE3_041028_00273_00005.IMG % Moon 28/10/04
+%% Decode an IMG file into parameters, labels, browse image and image
+imgfile_path = fullfile(img_path,imgfile_name);
+[params, label, bimg, img] = extract_IMG(imgfile_path, metakernel_path, flag_plot);
 
-[label, bimg, img] = decode_IMG(imgfile_path, flag_plot);
+%% Correct image with Bias and DC master frames
+mfbias_path = 'mf\mfbias.mat';
+mfdc_path = 'mf\mfdc.mat';
+[img_raw, img_new] = correct_IMG(imgfile_path, metakernel_path, mfbias_path, mfdc_path, flag_plot);
+
+%% Geometry check 
+% Check if expected Moon location by spice kernels match the Moon position on the image
+check_geometry_IMG(imgfile_path, metakernel_path, flag_plot);
+
+%% Radiometry check 
+% Check if browse image downloaded from database is the same of the original image linearly stretched
+bimgfile_name = [imgfile_name(1:end-4), '.png'];
+bimgfile_path = fullfile(img_path,'BROWSE',bimgfile_name); 
+
+check_radiometry_IMG(img, bimgfile_path, flag_plot);

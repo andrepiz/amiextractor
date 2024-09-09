@@ -57,7 +57,8 @@ camera_id = '-238110'; % Using NONE filter camera.
 
 params.f = 1e-3*cspice_gdpool(['INS',camera_id,'_','FOCAL_LENGTH'], 0, 1);
 params.fNum = cspice_gdpool(['INS',camera_id,'_','F/RATIO'], 0, 1);
-params.fov = cspice_gdpool(['INS',camera_id,'_','FOV_ANGULAR_SIZE'], 0, 1);
+%params.fov = cspice_gdpool(['INS',camera_id,'_','FOV_ANGULAR_SIZE'], 0,
+%1); % not consistent
 params.ifov = cspice_gdpool(['INS',camera_id,'_','IFOV'], 0, 1);
 params.muPixel = 1e-6*cspice_gdpool(['INS',camera_id,'_','PIXEL_SIZE'], 0, 1);
 params.res_px = cspice_gdpool(['INS',camera_id,'_','PIXEL_SAMPLES'], 0, 1);
@@ -65,6 +66,8 @@ lambda_mid = 1e-9*cspice_gdpool(['INS',camera_id,'_','FILTER_BANDCENTER'], 0, 1)
 lambda_band = 1e-9*cspice_gdpool(['INS',camera_id,'_','FILTER_BANDWIDTH'], 0, 1);
 params.lambda_min = lambda_mid - lambda_band/2;
 params.lambda_max = lambda_mid + lambda_band/2;
+
+params.fov = 2*atan((params.res_px.*params.muPixel/2)/params.f); % [rad] Field of view (u,v)
 
 
 %% REF: AMIE detector orientation in s/c coordinate system
@@ -84,7 +87,7 @@ dcm_J20002IAU = cspice_pxform('J2000', 'IAU_MOON', params.etImg);
 
 % CSF Frame
 %   centered at the planet COM
-%   z-axis along normal to the camera-body-sun plane
+%   z-axis cross vector between sun direction and camera direction
 %   x-axis along sun direction
 %   y-axis completes the frame
 xCSF_J2000 = -dir_sun2body_J2000_spice;
@@ -120,8 +123,7 @@ q_J20002CAM = dcm_to_quat(dcm_J20002CAM);
 %   body-fixed frame, SPICE-consistent
 q_J20002IAU = dcm_to_quat(dcm_J20002IAU);
 
-flag_debug = false;
-if flag_debug
+if flag_plot
     R_frames2ref(:,:,1) = dcm_J20002CSF';
     R_frames2ref(:,:,2) = dcm_J20002IAU';
     R_frames2ref(:,:,3) = dcm_J20002CAMI';
@@ -135,8 +137,8 @@ if flag_debug
         {'CSF','IAU','CAMI','CAM'},{'Sun','SC'});
 end
 
-params.q_CSF2IAU = quat_mult(quat_conj(q_J20002IAU), q_J20002CSF);
-params.q_CAMI2CAM = quat_mult(quat_conj(q_J20002CAM), q_J20002CAMI);
+params.q_CSF2IAU = quat_mult(quat_conj(q_J20002CSF), q_J20002IAU);
+params.q_CAMI2CAM = quat_mult(quat_conj(q_J20002CAMI), q_J20002CAM);
 params.d_body2cam = d_cam2body_spice;
 params.d_body2sun = d_sun2body_spice;
 

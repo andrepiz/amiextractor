@@ -1,7 +1,7 @@
 KPL/MK
 
    \begindata
-     PATH_VALUES       = ('C:\Users\andpi\OneDrive\Documenti\MATLAB\mice\data\smart1\kernels')
+     PATH_VALUES       = ('C:\Users\apizzetti\OneDrive\Documenti\MATLAB\mice\data\smart1\kernels')
 
 
      PATH_SYMBOLS      = ( 'KERNELS' )
