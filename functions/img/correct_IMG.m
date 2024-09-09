@@ -13,6 +13,8 @@ label_temp = extractBetween(label, 'EXPOSURE_DURATION              = ',' <MS>');
 tExp = 1e-3*str2double(label_temp{:});
 label_temp = extractBetween(label, 'GAIN_NUMBER                    = ',' <E/DN>');
 G_DA = str2double(label_temp{:});
+label_temp = extractBetween(label, 'FILE_NAME                      = "','"');
+nfilter = str2double(label_temp{:}(7));
 
 % Master frames
 load(mfbias_path)
@@ -23,7 +25,6 @@ load(mfdc_path)
 cspice_kclear;
 
 % IMAGE CORRECTION
-nfilter = 3;
 img_corr = mf2imgcorr(nfilter, mfbias, mfdc, tExp, Temp);
 img_new = img_raw - img_corr;
 img_new(img_new<0) = 0;
