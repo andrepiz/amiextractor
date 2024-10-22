@@ -1,10 +1,10 @@
 %% DEFINES THE PATHS %%
 
-user_name = 'apizzetti';
+user_name = 'USER_NAME';
 
-amiextractor_path = ['C:\Users\',user_name,'\OneDrive - Politecnico di Milano\03_PhD\06_Work\abram\validation\amie\amiextractor'];
+amiextractor_path = ['C:\Users\',user_name,'\PATH_TO_AMIEXTRACTOR'];
 img_path = [amiextractor_path,'\data\img'];
-mice_path =  ['C:\Users\',user_name,'\OneDrive\Documenti\MATLAB\mice'];
+mice_path =  ['C:\Users\',user_name,'\PATH_TO_MICE'];
 metakernel_path = [amiextractor_path,'\data'];
 
 addpath(genpath(amiextractor_path));
