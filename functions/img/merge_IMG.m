@@ -1,11 +1,19 @@
-function [img_full, label, bimg, img, fh] = merge_IMG(imgfile_path, flag_debug)
+function [img_full, label, bimg, img, fh] = merge_IMG(filepath_img, flag_plot)
 % Merge single-filter images into a single image
 
 nfilter = 8;
 
 filter_ids = 1:nfilter;
 
-imgfile_path_after = extractAfter(imgfile_path, 'AMI_LE');
+if contains(filepath_img, 'AMI_LR')
+    imgfile_volume = 'AMI_LR';
+elseif contains(filepath_img, 'AMI_LE')
+    imgfile_volume = 'AMI_LE';
+else
+    error('Volume identifier not recognized')
+end
+
+imgfile_path_after = extractAfter(filepath_img, imgfile_volume);
 
 % Description of the keyword RECORD_BYTES
 % This keyword denotes the number of bytes in one record. 
@@ -36,8 +44,8 @@ imgfile_path_after = extractAfter(imgfile_path, 'AMI_LE');
 
 %%
 for ix = 1:length(filter_ids)
-    imgfile_path_temp = ['AMI_LE',num2str(filter_ids(ix)),imgfile_path_after(2:end)];
-    [label{ix}, bimg{ix}, img{ix}] = decode_IMG(imgfile_path_temp, flag_debug);
+    filepath_img_temp = [imgfile_volume,num2str(filter_ids(ix)),imgfile_path_after(2:end)];
+    [label{ix}, bimg{ix}, img{ix}] = decode_IMG(filepath_img_temp, flag_plot);
 end
 
 %% MOSAIKING
@@ -61,8 +69,7 @@ img_full_mat = [img_nw, img_ne; img_sw, img_se];
 
 img_full = flip(img_full_mat, 1);
 
-
-if flag_debug
+if flag_plot
     %Plot image
     fh = figure(); 
     grid on, hold on

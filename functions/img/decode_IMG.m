@@ -1,8 +1,29 @@
-function [label, bimg, img, fh] = decode_IMG(file_path, flag_plot)
+function [label, bimg, img, fh] = decode_IMG(filepath, flag_plot)
 
-fid = fopen(file_path); 
-fdata = fread(fid);
-fclose(fid);
+% Please note that the EAICD requires a few updates:
+% 
+% *  In  older  versions  of  the  data product labels, the keyword SAM-
+%    PLE_BIT_MASK was used with the intension to scale the  data  number
+%    as  described in the EAICD. This was based on a wrong understanding
+%    of SAMPLE_BIT_MASK. Now the keyword SCALING_FACTOR is used instead,
+%    which  is not yet documented in the EAICD. However, the application
+%    is straight forward: The value provided in  the  data  product  has
+%    just  to be multiplied by the SCALING_FACTOR to obtain the original
+%    data number.  This is only applicable for the  raw  data;  for  the
+%    calibrated data, we always have SCALING_FACTOR = 1.
+% 
+% *  It  is  important  to  note  that additional geometrical parameters
+%    (beyond those provided in the data product labels) can be found  in
+%    the  `GEO_MOON'  index tabel in the `INDEX' directory.  This should
+%    prominently be advertised in the EAICD.
+
+fid = fopen(filepath); 
+try
+    fdata = fread(fid);
+    fclose(fid);
+catch
+    fid
+end
 
 %--- Label
 labelData = fdata(1:20481)';

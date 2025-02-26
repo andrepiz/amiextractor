@@ -1,4 +1,4 @@
-function bimg_stretched = check_radiometry_IMG(img, bimgfile_path, flag_plot)
+function bimg_stretched = check_radiometry_IMG(img, bimg, flag_plot)
 % To check correct extraction, browse images are available at:
 % https://archives.esac.esa.int/psa/ftp/SMALL-MISSIONS-FOR-ADVANCED-RESEARCH-AND-TECHNOLOGY/AMIE/S1-L-X-AMIE-2-EDR-EEP-V1.1/BROWSE/...
 % Both versions have the same resolution, but while the original images in PDS format have 10 bit
@@ -15,9 +15,6 @@ b = max(0, m - s);
 bimg_stretched = uint8((img - b)/(w - b)*255);
 
 if flag_plot
-
-    bimg = imread(bimgfile_path);
-    
     figure()
     subplot(1,2,1)
     imshow(bimg)

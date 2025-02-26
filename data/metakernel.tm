@@ -1,7 +1,7 @@
 KPL/MK
 
    \begindata
-     PATH_VALUES       = ('PATH_TO_KERNELS')
+     PATH_VALUES       = ('kernels')
 
 
      PATH_SYMBOLS      = ( 'KERNELS' )

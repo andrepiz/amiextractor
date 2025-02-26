@@ -11,21 +11,23 @@ dcmf = flip(dcmf, 1);
 switch nfilter
     case 3
         ixs = {1:512, 513:1024};
-
+        
+    case 'all'
+        ixs = {1:1024, 1:1024};
+        
     otherwise
         error('Not supported')
 end
 
-imgbias = flip(dcmf(ixs{:}), 1);
-imgdc = flip(biasmf(ixs{:}), 1);
+imgbias = flip(biasmf(ixs{:}), 1);
+imgdc = flip(dcmf(ixs{:}), 1);
 
 d0 = 8; % [DN]
-T0 = 273.15; % [K]
-k = 8.6171e-5; % [eV/K]
-fun_Eg = @(T) 1.11557 - 7.021e-4.*T^2/(1108 + T); % eV
-fun_T = @(T) (T./T0).^(1.5).*exp(fun_Eg(T0)./(2*k*T0) - fun_Eg(T)./(2*k*T));
+Ktemp = amie_thermal_noise_factor(Temp);
 
-img_corr = d0 + (imgbias + imgdc*tExp) * fun_T(Temp);
-
+% It seems that multiplying d0 for Ktemp returns better image matching.
+% Original equation in the docs:
+% img_corr = d0 + (imgbias + imgdc*tExp) * Ktemp;
+img_corr = d0*Ktemp + (imgbias + imgdc*tExp) * Ktemp;
 
 end

@@ -1,8 +1,6 @@
-function [C, xCir, yCir] = check_geometry_IMG(imgfile_path, metakernel_path, flag_plot)
+function [C, xCir, yCir] = check_geometry_IMG(img, params, flag_plot)
 % Check if moon projection is consistent with expected location.
 % Note: small differences are expected due to kernels uncertainties
-
-[params, label, bimg, img] = extract_IMG(imgfile_path, metakernel_path, false);
 
 K_c = [params.f/params.muPixel, 0, params.res_px/2 + 0.5; ...
        0 ,params.f/params.muPixel, params.res_px/2 + 0.5;...
@@ -15,7 +13,7 @@ uv_moon_center = K_c*dir_cam2body_CAM;
 uv_moon_center_scaled = uv_moon_center(1:2)/uv_moon_center(3);
 
 %Plot circle with Moon expected size
-MoonAngSize = atan(rMoon/params.d_body2cam);
+MoonAngSize = asin(rMoon/params.d_body2cam);
 MoonRadPix = MoonAngSize/(params.fov/params.res_px);
 angVecCir = deg2rad(0:1:360);
 xCir = MoonRadPix*cos(angVecCir) + uv_moon_center_scaled(1);

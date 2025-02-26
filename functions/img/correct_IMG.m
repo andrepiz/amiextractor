@@ -1,43 +1,23 @@
-function [img_raw, img_new, EC_raw, EC_new] = correct_IMG(imgfile_path, metakernel_path, mfbias_path, mfdc_path, flag_plot)
+function [img_new, EC_new, img_corr] = correct_IMG(img_raw, params, mfbias, mfdc, flag_plot)
 % Apply Bias and Dark Current master frames correction to an image
 
-%% LOAD DATA
-
-% Image
-[params, label, bimg_raw, img_raw] = extract_IMG(imgfile_path, metakernel_path, false);
-
-% Parameters
-label_temp = extractBetween(label, 'FOCAL_PLANE_TEMPERATURE        = ',' <K>');
-Temp = str2double(label_temp{:});
-label_temp = extractBetween(label, 'EXPOSURE_DURATION              = ',' <MS>');
-tExp = 1e-3*str2double(label_temp{:});
-label_temp = extractBetween(label, 'GAIN_NUMBER                    = ',' <E/DN>');
-G_DA = str2double(label_temp{:});
-label_temp = extractBetween(label, 'FILE_NAME                      = "','"');
-nfilter = str2double(label_temp{:}(7));
-
-% Master frames
-load(mfbias_path)
-load(mfdc_path)
-
 %% CORRECTION
-% Clear kernel pool
-cspice_kclear;
 
 % IMAGE CORRECTION
-img_corr = mf2imgcorr(nfilter, mfbias, mfdc, tExp, Temp);
+img_corr = mf2imgcorr(params.nfilter, mfbias, mfdc, params.tExp, params.Temp);
 img_new = img_raw - img_corr;
 img_new(img_new<0) = 0;
 
 % ELECTRON COUNT
-EC_raw = G_DA*img_raw;
-EC_new = G_DA*img_new;
+EC_raw = params.G_DA*img_raw;
+EC_new = params.G_DA*img_new;
 
 if flag_plot
 
     res_px = 512;
     [x_pixel, y_pixel] = meshgrid([1:res_px], [1:res_px]);
     clims = [min(img_raw,[],'all'), max(img_raw,[],'all')];
+    clims_ec = [min(EC_raw,[],'all'), max(EC_raw,[],'all')];
     clims_corr = median(img_corr,'all') + 3*std(img_corr,[],'all')*[-1, 1];
 
     figure()
@@ -67,6 +47,7 @@ if flag_plot
     surf(x_pixel, y_pixel, EC_raw, 'EdgeColor','none')
     set(gca,'YDir','reverse')
     colormap('parula')
+    clim(clims_ec)
     colorbar
     xlabel('u [px]')
     ylabel('v [px]')
@@ -80,6 +61,7 @@ if flag_plot
     surf(x_pixel, y_pixel, EC_new, 'EdgeColor','none')
     set(gca,'YDir','reverse')
     colormap('parula')
+    clim(clims_ec)
     colorbar
     xlabel('u [px]')
     ylabel('v [px]')
